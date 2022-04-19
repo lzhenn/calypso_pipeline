@@ -2,7 +2,7 @@
 # njord_9km3km 3km SWAN
 nml_temp=njord_9km3km
 rewrite_wind=True
-wrfout_path=/home/lzhenn/cooperate/data/case_study/wrfonly/
+wrfout_path=
 wrfout_domain=d01
 #in YYYYMMDDHHMM
 #start_time=202110240000
@@ -25,8 +25,8 @@ init_run=1
 
 [OUTPUT]
 # wrf interp wind output dir
-output_root =/home/lzhenn/Calypso/Projects/Calypso_Tier1/
+output_root =/home/pathop/njord/COAWST_Calypso/Projects/Calypso_Tier1/
 output_fn=swan_wind.dat
 
 [ARCHIVE]
-arch_path=/home/lzhenn/array74/Njord_Calypso/archive/calypso-gfs/
+arch_path=

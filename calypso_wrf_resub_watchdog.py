@@ -19,7 +19,7 @@ def main_run():
      
     
     # controller config handler
-    cfg_hdl=lib.cfgparser.read_cfg('./conf/fcst.ini')
+    cfg_hdl=lib.cfgparser.read_cfg('./conf/fcst.resub.ini')
         
     if (cfg_hdl['INPUT']['model_init_ts']== 'realtime'):
         today = datetime.datetime.today()+datetime.timedelta(days=-1)
@@ -64,7 +64,7 @@ def main_run():
         else:
             print('waiting for %s to be generated, %4ds passed...' % (
                 test_fn, time.time()-tic))
-            if time.time()-tic > 5400:
+            if time.time()-tic > 10800:
                 print('maximum waiting time elapsed, exit...')
                 exit()
             time.sleep(SLEEP)
@@ -89,12 +89,10 @@ def main_run():
             swan_cfg['CORE']['ntasks']=cfg_hdl['CORE']['ntasks']
 
             lib.cfgparser.write_cfg(swan_cfg, './conf/config.ini')
-            xfn='wrfxtrm_d0?_%s' % swan_strt_ts.strftime('%Y-%m-%d_%H:00:00')
-            os.system('mv '+watch_dir+'/'+xfn+' '+arch_path)
             swan_strt_ts=curr_ts
 
-            os.system('python3 '+CWD+'/ctrl_run_calypso.py ')
-           
+            os.system('python3 '+CWD+'/ctrl_run_calypso.py')
+            
     print('-----------------------ALL TASKS DONE!!!-----------------------')        
 
 # ---------------------END OF MAIN---------------------

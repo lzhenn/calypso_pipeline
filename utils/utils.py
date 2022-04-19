@@ -43,27 +43,7 @@ def get_wrf_file(tgt_time, wrf_dir, wrf_domain):
     '''
     return aimed wrf file name given tgt_time and wrf_domain
     '''
-    dirlst=(os.listdir(wrf_dir))
-    wrfout_lst=[itm for itm in dirlst if wrf_domain in itm]
-    
-    time_stamps=[
-            datetime.datetime.strptime(itm[11:],'%Y-%m-%d_%H:%M:%S')
-            for itm in wrfout_lst]
-
-    # try if single frame
-    wrf_hdl=nc4.Dataset(wrf_dir+wrfout_lst[0])
-    wrf_time=wrf.extract_times(
-            wrf_hdl,timeidx=wrf.ALL_TIMES, do_xtime=False)
-    if len(wrf_time)>1: 
-        for itime, ifile in zip(time_stamps, wrfout_lst):
-            if tgt_time >=itime:
-                return ifile
-    else:
-        for itime, ifile in zip(time_stamps, wrfout_lst):
-            if tgt_time ==itime:
-                return ifile
-
-
+    return 'wrfout_'+wrf_domain+'_'+tgt_time.strftime('%Y-%m-%d_%H:00:00')
 def interp_wrf2swan(wrf_var, swan_lat, swan_lon):
     """ 
     Linearly interpolate var from WRF grid onto SWAN grid 

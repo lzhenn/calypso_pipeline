@@ -9,10 +9,11 @@ May 26, 2021 --- Initial
 Oct 25, 2021 --- Fit S2S usage
 Nov  1, 2021 --- build dispatcher
 Feb 19, 2022 --- build for operational calypso 
+Apr 19, 2022 --- build for ltm simulation
 Zhenning LI
 '''
 import os, sys, logging.config
-import datetime
+import datetime, time
 
 import lib 
 from utils import utils
@@ -46,8 +47,25 @@ def main_run():
     args=args+cfg_hdl['INPUT']['nml_temp']+' '
     args=args+cfg_hdl['CORE']['init_run']+' '
     args=args+cfg_hdl['INPUT']['swan_ndom']+' '
-    
+    print(args) 
+            
+    rst_lead=1
+    strt_time=time.time()
     os.system('sh calypso_swan.sh '+ args)
+    end_time=time.time()
+    
+    while (end_time-strt_time<300):
+        print('Runtime error detected, try resub with previous rst files...')
+        rst_lead=rst_lead+1
+        strt_time=time.time()
+        os.system('sh '+CWD+'/calypso_swan.sh '+args+' '+str(rst_lead))
+        end_time=time.time()
+
+        if (rst_lead>5):
+            print('Failed in maximum resub tests, exit...')
+            exit()
+
+
 
 # ---------------------END OF MAIN---------------------
 
