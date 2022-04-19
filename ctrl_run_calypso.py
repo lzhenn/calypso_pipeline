@@ -45,6 +45,7 @@ def main_run():
     args=args+cfg_hdl['ARCHIVE']['arch_path']+' '
     args=args+cfg_hdl['INPUT']['nml_temp']+' '
     args=args+cfg_hdl['CORE']['init_run']+' '
+    args=args+cfg_hdl['INPUT']['swan_ndom']+' '
     
     os.system('sh calypso_swan.sh '+ args)
 

@@ -65,7 +65,7 @@ class Dispatcher:
         utils.write_log(print_prefix+'Interpolate wind for SWAN...')
         
         # SWAN domain file
-        ds_swan=xr.load_dataset(CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/roms.nc')
+        ds_swan=xr.load_dataset(CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/roms_d01.nc')
         lat_swan=ds_swan['lat_rho']
         lon_swan=ds_swan['lon_rho']
        
@@ -119,7 +119,7 @@ class Dispatcher:
             
             curr_time=curr_time+self.wind_time_delta
             
-        # add one more time stamp to close the file
+        # add one more time stamp to close up the file
         swan_uv=np.concatenate((swan_uv, swan_u, swan_v), axis=0)
                 
         utils.write_log('Output...')
@@ -127,20 +127,5 @@ class Dispatcher:
             np.savetxt(f, swan_uv, fmt='%7.2f', delimiter=' ')
             f.write('\n')
         
-        '''
-        ds = xr.Dataset(
-                data_vars=dict(
-                    u=(['x','y'],swan_u),
-                    v=(['x','y'],swan_v),
-                    ),
-                coords=dict(
-                    lon=(['x','y'],lon_swan.values),
-                    lat=(['x','y'],lat_swan.values),
-                    )
-                )
-
-        ds.to_netcdf(cfg_hdl['OUTPUT']['output_root']+'swan_wind_d02.nc')
-        '''
-              
     #def modify_swanin(self, cfg):
     #def run_swan(self, cfg):
