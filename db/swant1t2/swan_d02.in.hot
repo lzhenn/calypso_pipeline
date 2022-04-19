@@ -27,7 +27,7 @@ READINP WIND 1 'Projects/Calypso_t1t2/swan_wind_d02.dat' 4 0 FREE
 BOUND SHAPESPEC JONSWAP PEAK DSPR DEGREES
 
 & Restart name **********************************
-&INITIAL HOTSTART SINGLE 'swan_d02.hot'
+INITIAL HOTSTART MULTIPLE 'swan_d02.hot'
 &INIT
 
 & PHYSICS  ****************************************

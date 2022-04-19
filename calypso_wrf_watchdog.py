@@ -29,8 +29,6 @@ def main_run():
                 cfg_hdl['INPUT']['model_init_ts'], '%Y%m%d%H')
     
     arch_path=cfg_hdl['ARCHIVE']['arch_root']+'/'+init_ts.strftime('%Y%m%d%H')
-    if not os.path.exists(arch_path):
-        os.makedirs(arch_path)
 
     total_dom=int(cfg_hdl['INPUT']['ndom'])
     dom_lb=['d0'+str(i) for i in range(1,total_dom+1)]
@@ -40,6 +38,9 @@ def main_run():
     round_nfiles=int(cfg_hdl['CORE']['round_nfiles'])
     move_flag=cfg_hdl['INPUT'].getboolean('move_flag')
 
+    if not os.path.exists(arch_path) and move_flag:
+        os.makedirs(arch_path)
+    
     # for pure wrf
     watch_dir=cfg_hdl['INPUT']['watch_path']
     
@@ -90,7 +91,8 @@ def main_run():
 
             lib.cfgparser.write_cfg(swan_cfg, './conf/config.ini')
             xfn='wrfxtrm_d0?_%s' % swan_strt_ts.strftime('%Y-%m-%d_%H:00:00')
-            os.system('mv '+watch_dir+'/'+xfn+' '+arch_path)
+            if move_flag:
+                os.system('mv '+watch_dir+'/'+xfn+' '+arch_path)
             swan_strt_ts=curr_ts
 
             os.system('python3 '+CWD+'/ctrl_run_calypso.py ')

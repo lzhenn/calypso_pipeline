@@ -7,9 +7,9 @@ NML_TMP=$6
 INIT_RUN_FLAG=$7
 NDOM=$8
 RST_LEADDAY=$9
-RST_ROOT=$10
+RST_ROOT=$ARCH_PATH
 
-RST_ROOT=/home/pathop/njord/data/restart/clps/
+#RST_ROOT=/home/pathop/njord/data/restart/clps/
 echo ">>>>SWAN: Adjust files"
 NODELIST='nodelist.p1.fcst'
 #cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
@@ -35,7 +35,6 @@ done
 
 # Calypso Root
 CALYPSO_ROOT=${CALYPSO_PATH%Projects*}
-cp ./db/nodelist* ${CALYPSO_ROOT}
 
 cd ${CALYPSO_ROOT}
 if [ $INIT_RUN_FLAG == 1 ]; then
@@ -43,7 +42,10 @@ if [ $INIT_RUN_FLAG == 1 ]; then
     mv ./spunup_restart/* ./
 fi
 echo ">>>>SWAN: Run Calypso..."
+startTime_s=`date +%s`
 mpirun -np ${NTASKS} ./coawstM ${CMD} >& calypso.log
+endTime_s=`date +%s`
+sumTime=$[ $endTime_s - $startTime_s ]
 
 ARCH_DATE=`basename ${ARCH_PATH}`
 INIT_HR=${ARCH_DATE:8:2}
@@ -53,7 +55,7 @@ CURR_TS=$(date -d "${STRT_YMDH:0:8}" +%s)
 TIME_DELTA=`expr $CURR_TS - $INIT_TS`
 TIME_DELTA=`expr $TIME_DELTA / 86400`
 
-if [ $sumTime -gt 600 ]; then 
+if [ $sumTime -gt 120 ]; then 
     echo ">>>>SWAN: Archive files"
 
     if [ $INIT_RUN_FLAG == 1 ]; then

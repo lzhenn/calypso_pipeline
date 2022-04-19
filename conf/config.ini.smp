@@ -1,6 +1,7 @@
 [INPUT]
 # njord_9km3km 3km SWAN
-nml_temp=njord_9km3km
+nml_temp=swant1t2
+swan_ndom=2
 rewrite_wind=True
 wrfout_path=
 wrfout_domain=d01
@@ -25,7 +26,7 @@ init_run=1
 
 [OUTPUT]
 # wrf interp wind output dir
-output_root =/home/pathop/njord/COAWST_Calypso/Projects/Calypso_Tier1/
+output_root =/home/lzhenn/Calypso/Projects/Calypso_t1t2/
 output_fn=swan_wind.dat
 
 [ARCHIVE]

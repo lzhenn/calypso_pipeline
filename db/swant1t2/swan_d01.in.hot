@@ -91,7 +91,7 @@ BOUNDSPEC SEGMENT IJ  769     0  769   513  CONSTANT PAR 0.5 14.0 0. 20.
 &BOUNDSPEC SEGMENT IJ    81    65    65    65 VARIABLE FILE 0 'Projects/GBA/WW3part_11.spc2d'
 
 & Restart name **********************************
-&INITIAL HOTSTART MULTIPLE 'swan_d01.hot'
+INITIAL HOTSTART MULTIPLE 'swan_d01.hot'
 &INIT
 
 & PHYSICS  ****************************************
