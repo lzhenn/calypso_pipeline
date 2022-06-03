@@ -17,3 +17,7 @@ def write_cfg(cfg_hdl, config_fn):
     with open(config_fn, 'w') as configfile:
         cfg_hdl.write(configfile)
 
+def get_varlist(cfg_itm):
+    varlist=cfg_itm.split(',')
+    varlist=[ele.strip() for ele in varlist]
+    return varlist

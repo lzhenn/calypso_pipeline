@@ -39,6 +39,7 @@ def write_log(msg, lvl=20):
 
     logging.log(lvl, msg)
 
+
 def get_wrf_file(tgt_time, wrf_dir, wrf_domain):
     '''
     return aimed wrf file name given tgt_time and wrf_domain

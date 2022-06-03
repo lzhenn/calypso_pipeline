@@ -2,14 +2,13 @@
 # njord_9km3km 3km SWAN
 nml_temp=swant1t2
 swan_ndom=2
+swan_wrf_match=d01:d01,d02:d02
+innermost=True
 rewrite_wind=True
 wrfout_path=
-wrfout_domain=d01
 #in YYYYMMDDHHMM
-#start_time=202110240000
-#end_time=202111010000
-start_time=2021091512
-end_time=2021091612
+start_time=2018091200
+end_time=2018091700
 
 # inverval of wind forcing in input data in minutes
 wind_time_delta=60
@@ -17,17 +16,17 @@ wind_time_delta=60
 [CORE]
 run_calypso=True
 # allocated CPUs for SWAN
-ntasks=32
+ntasks=48
 # If do long-term integration, use this restart mode
 # restart frq in hours: suggest 24, 48, 72, 96, 120
-restart_frq=3
+restart_frq=24
 # init run
 init_run=1
 
 [OUTPUT]
 # wrf interp wind output dir
 output_root =/home/lzhenn/Calypso/Projects/Calypso_t1t2/
-output_fn=swan_wind.dat
+wind_prefix=swan_wind
 
 [ARCHIVE]
 arch_path=

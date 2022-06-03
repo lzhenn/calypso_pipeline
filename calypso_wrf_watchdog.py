@@ -67,7 +67,6 @@ def main_run():
                 test_fn, time.time()-tic))
             if time.time()-tic > 5400:
                 print('maximum waiting time elapsed, exit...')
-                exit()
             time.sleep(SLEEP)
             
         # call swan model
@@ -96,7 +95,6 @@ def main_run():
             swan_strt_ts=curr_ts
 
             os.system('python3 '+CWD+'/ctrl_run_calypso.py ')
-           
     print('-----------------------ALL TASKS DONE!!!-----------------------')        
 
 # ---------------------END OF MAIN---------------------

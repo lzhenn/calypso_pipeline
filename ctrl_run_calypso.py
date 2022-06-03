@@ -53,14 +53,13 @@ def main_run():
     strt_time=time.time()
     os.system('sh calypso_swan.sh '+ args)
     end_time=time.time()
-    
     while (end_time-strt_time<300):
         print('Runtime error detected, try resub with previous rst files...')
         rst_lead=rst_lead+1
         strt_time=time.time()
         os.system('sh '+CWD+'/calypso_swan.sh '+args+' '+str(rst_lead))
         end_time=time.time()
-
+        
         if (rst_lead>5):
             print('Failed in maximum resub tests, exit...')
             exit()

@@ -12,7 +12,7 @@ RST_ROOT=$ARCH_PATH
 #RST_ROOT=/home/pathop/njord/data/restart/clps/
 echo ">>>>SWAN: Adjust files"
 NODELIST='nodelist.p1.fcst'
-#cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
+cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
 
 
 WKSP_DIR=`pwd`
@@ -30,7 +30,8 @@ for IDOM in `seq 1 $NDOM`
 do
     sed -i "s/ssyyyymmdd.hh/${STRT_YMDH}/g" ${CALYPSO_PATH}/swan_d0${IDOM}.in
     sed -i "s/eeyyyymmdd.hh/${END_YMDH}/g" ${CALYPSO_PATH}/swan_d0${IDOM}.in
-    CMD=${CMD}" "${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
+    CMD=${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
+    #CMD=${CMD}" "${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
 done
 
 # Calypso Root
@@ -42,11 +43,11 @@ if [ $INIT_RUN_FLAG == 1 ]; then
     mv ./spunup_restart/* ./
 fi
 echo ">>>>SWAN: Run Calypso..."
+echo ${CMD}
 startTime_s=`date +%s`
 mpirun -np ${NTASKS} ./coawstM ${CMD} >& calypso.log
 endTime_s=`date +%s`
 sumTime=$[ $endTime_s - $startTime_s ]
-
 ARCH_DATE=`basename ${ARCH_PATH}`
 INIT_HR=${ARCH_DATE:8:2}
 ARCH_DATE=${ARCH_DATE:0:8}
@@ -73,6 +74,8 @@ if [ $sumTime -gt 120 ]; then
     fi
 
     sleep 5
+
+    #mv ${CALYPSO_ROOT}/d02bdy* ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*mat ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*TXT ${ARCH_PATH}
 
