@@ -10,11 +10,9 @@
 """
 import datetime
 import os
-import numpy as np
-import pandas as pd
-from scipy import interpolate
-import netCDF4 as nc4
-import wrf
+#import numpy as np
+#import pandas as pd
+#import netCDF4 as nc4
 
 import logging, logging.config
 
@@ -50,6 +48,8 @@ def interp_wrf2swan(wrf_var, swan_lat, swan_lon):
     Linearly interpolate var from WRF grid onto SWAN grid 
     """
     
+    from scipy import interpolate
+
     x_org=wrf_var.XLAT.values.flatten()
     y_org=wrf_var.XLONG.values.flatten()
     
