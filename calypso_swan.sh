@@ -9,11 +9,13 @@ NDOM=$8
 RST_LEADDAY=$9
 RST_ROOT=$ARCH_PATH
 
-#RST_ROOT=/home/pathop/njord/data/restart/clps/
 echo ">>>>SWAN: Adjust files"
 NODELIST='nodelist.p1.fcst'
-cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
+if [ ! -d "$CALYPSO_PATH" ]; then
+    mkdir $CALYPSO_PATH
+fi
 
+cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
 
 WKSP_DIR=`pwd`
 if [ $INIT_RUN_FLAG == 1 ]; then
@@ -40,7 +42,6 @@ CALYPSO_ROOT=${CALYPSO_PATH%Projects*}
 cd ${CALYPSO_ROOT}
 if [ $INIT_RUN_FLAG == 1 ]; then
     rm -f *.hot-*
-    mv ./spunup_restart/* ./
 fi
 echo ">>>>SWAN: Run Calypso..."
 echo ${CMD}
@@ -58,10 +59,6 @@ TIME_DELTA=`expr $TIME_DELTA / 86400`
 
 if [ $sumTime -gt 120 ]; then 
     echo ">>>>SWAN: Archive files"
-
-    if [ $INIT_RUN_FLAG == 1 ]; then
-        cp *.hot-* ./spunup_restart/
-    fi
     # archive day 1-n spunup restarts for future usage
     
     if [ $TIME_DELTA -lt 10 ]; then
@@ -77,10 +74,13 @@ if [ $sumTime -gt 120 ]; then
 
     #mv ${CALYPSO_ROOT}/d02bdy* ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*mat ${ARCH_PATH}
+    mv ${CALYPSO_ROOT}/*nc ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*TXT ${ARCH_PATH}
 
 else
-    echo $sumTime"s elapsed for 1-day run, unreasonable run time!"
+    exit 1
+    echo $sumTime"s elapsed for 1-day run, unreasonable run time! Resubmit after 5s"
+    sleep 5
     # try previous day init
     INI_DATE=`date -d "${STRT_YMDH:0:8} -${RST_LEADDAY} day" +%Y%m%d`
     sh $WKSP_DIR/utils/fetch_ocn_rst.sh ${INI_DATE}${INIT_HR} ${STRT_YMDH/./} ${CALYPSO_ROOT} $RST_ROOT

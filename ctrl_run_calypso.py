@@ -39,9 +39,11 @@ def main_run():
 
     utils.write_log('Run Calypso...')
     
+    proj_path=cfg_hdl['CORE']['calypso_path']+'/Projects/'+cfg_hdl['INPUT']['nml_temp']+'/'
+
     args=ctrler.strt_time.strftime('%Y%m%d.%H')+' '
     args=args+ctrler.end_time.strftime('%Y%m%d.%H')+' '
-    args=args+cfg_hdl['OUTPUT']['output_root']+' '
+    args=args+proj_path+' '
     args=args+cfg_hdl['CORE']['ntasks']+' '
     args=args+cfg_hdl['ARCHIVE']['arch_path']+' '
     args=args+cfg_hdl['INPUT']['nml_temp']+' '
@@ -53,7 +55,9 @@ def main_run():
     strt_time=time.time()
     os.system('sh calypso_swan.sh '+ args)
     end_time=time.time()
-    while (end_time-strt_time<300):
+    
+    exit() # exit for analysis run
+    while (end_time-strt_time<120):
         print('Runtime error detected, try resub with previous rst files...')
         rst_lead=rst_lead+1
         strt_time=time.time()

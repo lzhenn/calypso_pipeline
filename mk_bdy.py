@@ -6,15 +6,8 @@ Revision:
 June 7, 2022 --- Initial
 '''
 import logging.config
-import math 
 import lib
 from utils import utils
-
-def cal_dir_spread(sigma):
-    '''
-    return parameterized spread angle 
-    '''
-    return  math.asin(sigma/math.sqrt(2))*180.0/math.pi
 
 def main_run():
     # logging manager

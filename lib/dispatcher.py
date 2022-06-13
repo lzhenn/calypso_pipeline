@@ -46,7 +46,7 @@ class Dispatcher:
         utils.write_log(print_prefix+'Construct dispatcher...')
         self.strt_time=datetime.datetime.strptime(cfg_hdl['INPUT']['start_time'],'%Y%m%d%H')
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
-        self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['INPUT']['wind_time_delta']))
+        self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['WIND']['wind_time_delta']))
 
 
     def dispatch(self, cfg):
@@ -55,7 +55,7 @@ class Dispatcher:
         strt_time=self.strt_time
         end_time=self.end_time
 
-        if cfg['INPUT'].getboolean('rewrite_wind'):
+        if cfg['WIND'].getboolean('rewrite_wind'):
             self.interp_wind(strt_time, end_time, cfg)
 
 
@@ -67,7 +67,7 @@ class Dispatcher:
         ndom=int(cfg['INPUT']['swan_ndom'])
         
         # WRF Parameters
-        wrf_dir=cfg['INPUT']['wrfout_path']+'/'
+        wrf_dir=cfg['WIND']['wrfout_path']+'/'
         dom_match=lib.cfgparser.get_varlist(cfg['INPUT']['swan_wrf_match'])
 
         for idom in range(ndom):
@@ -81,8 +81,8 @@ class Dispatcher:
             lon_swan=ds_swan['lon_rho']
            
             # IF force file exists
-            force_fn=cfg['OUTPUT']['wind_prefix']+'_'+dom_id+'.dat'
-            force_fn=cfg['OUTPUT']['output_root']+'/'+force_fn
+            force_fn=cfg['WIND']['wind_prefix']+'_'+dom_id+'.dat'
+            force_fn=cfg['CORE']['calypso_path']+'/Projects/'+cfg['INPUT']['nml_temp']+'/'+force_fn
             
             if os.path.exists(force_fn):
                 utils.write_log('Delete existing wind file...%s' % force_fn, 30)

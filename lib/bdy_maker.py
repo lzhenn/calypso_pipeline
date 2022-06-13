@@ -8,8 +8,8 @@
 """
 
 import datetime
-import sys
-
+import sys, os
+from scipy.interpolate import griddata
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -36,7 +36,6 @@ class BdyMaker:
         self.fprefix=cfg_hdl['BOUNDARY']['bdy_prefix']
         self.bdy_dir=cfg_hdl['BOUNDARY']['bdy_dir']
         self.out_dir=cfg_hdl['CORE']['calypso_path']
-        self.bdy_time_delta=cfg_hdl['BOUNDARY']['bdy_time_delta']
 
         # load domain file
         self.load_domain(cfg_hdl)
@@ -103,7 +102,7 @@ class BdyMaker:
                         seg_dict=close_seg(seg_dict, 
                             latline[i-1], lonline[i-1], seg_len)
                         self.segs.append(seg_dict)
-                        seg_dict={}
+                    seg_dict={}
                     find_flag=False
             # last position
             if i==maskline.shape[0]-1:
@@ -119,26 +118,47 @@ class BdyMaker:
         utils.write_log(print_prefix+'print seg cmd for swan.in...')
         for seg in self.segs:
             print('BOUNDSPEC SEGMENT XY %8.4f %8.4f %8.4f %8.4f VARIABLE FILE 0 \'%s\''
-                % (seg['lat0'], seg['lon0'], seg['lat1'], seg['lon1'], seg['file']))
+                % (seg['lon0'], seg['lat0'], seg['lon1'], seg['lat1'], seg['file']))
     
     def parse_seg_waves(self):
         """ parse seg cmd for swan.in 
         """
         utils.write_log(print_prefix+'parse seg waves from bdy files...')
-        ts=pd.date_range(
-            start=self.strt_time, end=self.end_time, 
-            freq=self.bdy_time_delta+'min')
+               # read the first file
+        fn=self.bdy_dir+'/'+self.strt_time.strftime('%Y%m%d')+'-wv.grib'
+        utils.write_log(print_prefix+fn+' Reading...')
+        if not(os.path.exists(fn)):
+            utils.throw_error(print_prefix+'cannot locate:'+fn+', please check files or settings!')
 
+        ds_grib = [xr.load_dataset(fn, engine='cfgrib', backend_kwargs={'errors': 'ignore'})]
+        # read following files
+        curr_t= self.strt_time
+        while curr_t.strftime('%Y%m%d') != self.end_time.strftime('%Y%m%d'):
+            curr_t=curr_t+datetime.timedelta(days=1)
+            fn=self.bdy_dir+'/'+curr_t.strftime('%Y%m%d')+'-wv.grib'
+            utils.write_log(print_prefix+fn+' Reading...')
+            if not(os.path.exists(fn)):
+                utils.throw_error(print_prefix+'cannot locate:'+fn+', please check files or settings!')
+            ds_grib.append(xr.load_dataset(fn, engine='cfgrib', backend_kwargs={'errors': 'ignore'}))
+        
+        comb_ds=xr.concat(ds_grib, 'time')
+        
+
+        src_lon=comb_ds['longitude'].values
+        src_lat=comb_ds['latitude'].values
+        src_lat2d,src_lon2d=np.meshgrid(src_lat, src_lon)
+        src_mask=np.isnan(comb_ds['swh'].isel(time=0).values)
+        ts=comb_ds['valid_time'].values
         len_ts=len(ts)
-
         for seg in self.segs:
-            seg['sigh']=5*np.random.rand(len_ts)
-            seg['period']=20*np.random.rand(len_ts)
-            seg['dir']=5*np.random.rand(len_ts)+90
-            seg['spread']=np.repeat(20, len_ts)
+            i,j=find_ij_mask(src_lat2d,src_lon2d,src_mask,seg['latm'],seg['lonm'])
+            seg['sigh']=comb_ds['swh'].values[:,j,i]
+            seg['period']=comb_ds['mwp'].values[:,j,i]
+            seg['dir']=comb_ds['mwd'].values[:,j,i]
+            seg['spread']=cal_dir_spread(comb_ds['wdw'].values[:,j,i])
             data=np.array([seg['sigh'], seg['period'], seg['dir'], seg['spread']])
             seg['df'] = pd.DataFrame(data.T, index=ts, columns=['sigh', 'period', 'dir', 'spread'])
-    
+           
     def gen_seg_files(self):
         """ generate seg files """ 
         utils.write_log(print_prefix+'generate seg files...')
@@ -152,6 +172,30 @@ class BdyMaker:
                 % (tp[0].strftime('%Y%m%d.%H%M'), tp[1], tp[2], tp[3], tp[4]))
             seg_file.close()
 
+def find_ij_mask(lat2d, lon2d, mask, latm, lonm):
+    """ find i,j in src_lat, src_lon, src_mask 
+    """
+    dislat=lat2d-latm
+    dislon=lon2d-lonm
+    dis=np.sqrt(dislat**2+dislon**2)
+    ids=np.argsort(dis, axis=None)
+    ij_tp=np.unravel_index(ids,lat2d.shape)
+    for i,j in zip(ij_tp[0], ij_tp[1]):
+        # over ocean
+        if mask[j,i]==False:
+            #utils.write_log(print_prefix+'search latm=%9.2f,lonm=%9.2f...' % (latm, lonm))
+            #utils.write_log(print_prefix+'find i=%3d,j=%3d...'%(i,j))
+            #utils.write_log(print_prefix+'find latx=%9.2f,lonx=%9.2f, with dis=%9.2f' 
+            #    % (lat2d[i,j], lon2d[i,j], dis[i,j]*111))
+            return i,j
+
+def cal_dir_spread(sigma):
+    '''
+    return parameterized spread angle 
+    '''
+    return  np.arcsin(sigma/np.sqrt(2))*180.0/np.pi
+
+           
 def close_seg(seg_dict, lat, lon, seg_len):
     """close a segment"""
     seg_dict['lat1']=lat
