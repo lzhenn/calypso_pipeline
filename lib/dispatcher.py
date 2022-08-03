@@ -46,8 +46,9 @@ class Dispatcher:
         utils.write_log(print_prefix+'Construct dispatcher...')
         self.strt_time=datetime.datetime.strptime(cfg_hdl['INPUT']['start_time'],'%Y%m%d%H')
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
-        self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['WIND']['wind_time_delta']))
-        self.proj_path=cfg_hdl['CORE']['calypso_path']+'/Projects/'+cfg_hdl['INPUT']['nml_temp']
+        self.wind_time_delta=datetime.timedelta(minutes=60)
+        #self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['WIND']['wind_time_delta']))
+        self.proj_path=CWD+'/Calypso/Projects/'+cfg_hdl['INPUT']['nml_temp']
 
         if not(os.path.exists(self.proj_path)):
             utils.write_log(print_prefix+'Project path does not exists, make it...')
@@ -67,7 +68,8 @@ class Dispatcher:
         utils.write_log(print_prefix+'Interpolate wind for SWAN...')
         
         # active domains
-        ndom=int(cfg['INPUT']['swan_ndom'])
+        ndom=1
+        #ndom=int(cfg['INPUT']['swan_ndom'])
         
         # WRF Parameters
         wrf_dir=cfg['WIND']['wrfout_path']
@@ -94,7 +96,8 @@ class Dispatcher:
             lon_swan=ds_swan['lon_rho']
            
             # IF force file exists
-            force_fn=cfg['WIND']['wind_prefix']+'_'+dom_id+'.dat'
+            force_fn='swan_wind_'+dom_id+'.dat'
+            #force_fn=cfg['WIND']['wind_prefix']+'_'+dom_id+'.dat'
             force_fn=self.proj_path+'/'+force_fn
             
             if os.path.exists(force_fn):

@@ -53,14 +53,14 @@ TIME_DELTA=`expr $TIME_DELTA / 86400`
 if [ $sumTime -gt 60 ]; then 
     echo ">>>>SWAN: Archive files"
     # archive day 1-n spunup restarts for future usage
-    
+    if [ ! -d "$ARCH_PATH" ]; then
+        mkdir $ARCH_PATH
+    fi
+
+
     if [ $TIME_DELTA -lt 10 ]; then
         RST_DATE=`date -d "${STRT_YMDH:0:8} +1 day" +%Y%m%d`
         sh $WKSP_DIR/utils/collect_ocn_rst.sh $ARCH_DATE${INIT_HR} ${RST_DATE}${INIT_HR} ${CALYPSO_ROOT} $RST_ROOT
-    fi
-
-    if [ ! -d "$ARCH_PATH" ]; then
-        mkdir $ARCH_PATH
     fi
 
     sleep 5

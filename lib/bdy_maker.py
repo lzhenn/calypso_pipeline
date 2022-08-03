@@ -10,7 +10,6 @@
 import datetime
 import sys, os
 import re
-from scipy.interpolate import griddata
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -35,9 +34,11 @@ class BdyMaker:
         self.strt_time=datetime.datetime.strptime(cfg_hdl['INPUT']['start_time'],'%Y%m%d%H')
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
         self.seglen=float(cfg_hdl['BOUNDARY']['seg_len'])
-        self.fprefix=cfg_hdl['BOUNDARY']['bdy_prefix']
+        self.fprefix='swan_bdy'
+        #self.fprefix=cfg_hdl['BOUNDARY']['bdy_prefix']
         self.bdy_dir=cfg_hdl['BOUNDARY']['bdy_dir']
-        self.out_dir=cfg_hdl['CORE']['calypso_path']
+        self.out_dir=CWD+'/Calypso/'
+        #self.out_dir=cfg_hdl['CORE']['calypso_path']
 
 
         # load domain file

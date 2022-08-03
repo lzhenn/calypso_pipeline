@@ -13,6 +13,7 @@ Feb 19, 2022 --- build for operational calypso
 Apr 19, 2022 --- build for ltm simulation
 Jun 11, 2022 --- build for ltm simulation with seperated simulations
 Jul 24, 2022 --- modified for packaging
+Aug  3, 2022 --- pkg test version
 Zhenning LI
 '''
 import os, sys, logging.config
@@ -80,6 +81,7 @@ def main_run():
     full_strt_time=datetime.datetime.strptime(cfg['INPUT']['start_time'],'%Y%m%d%H')
     full_end_time=datetime.datetime.strptime(cfg['INPUT']['end_time'],'%Y%m%d%H')
 
+    cfg['ARCHIVE']['arch_path']=cfg['ARCHIVE']['arch_path']+full_strt_time.strftime('%Y%m%d%H')
     # link ust wrfout
     if cfg['WIND']['wrfout_path']=='@PATH':
         deal_ustwrf(full_strt_time, full_end_time, cfg) 

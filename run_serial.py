@@ -41,11 +41,12 @@ def main_run():
 
     utils.write_log('Run Calypso...')
     
-    proj_path=cfg_hdl['CORE']['calypso_path']+'/Projects/'+cfg_hdl['INPUT']['nml_temp']+'/'
+    proj_path=CWD+'/Calypso/Projects/'+cfg_hdl['INPUT']['nml_temp']+'/'
 
     # deal with swan domains 
     dom_match=lib.cfgparser.get_varlist(cfg_hdl['INPUT']['swan_wrf_match'])
-    ndom=int(cfg_hdl['INPUT']['swan_ndom'])
+    #ndom=int(cfg_hdl['INPUT']['swan_ndom'])
+    ndom=1
     for idom in range(ndom):
         dom_id=dom_match[idom].split(':')[0]
         args=ctrler.strt_time.strftime('%Y%m%d.%H')+' '
