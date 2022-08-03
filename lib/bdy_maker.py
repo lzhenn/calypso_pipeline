@@ -9,6 +9,7 @@
 
 import datetime
 import sys, os
+import re
 from scipy.interpolate import griddata
 import numpy as np
 import pandas as pd
@@ -18,6 +19,7 @@ from utils import utils
 print_prefix='lib.bdy_maker>>'
 
 CWD=sys.path[0]
+
 
 class BdyMaker:
 
@@ -32,10 +34,11 @@ class BdyMaker:
         utils.write_log(print_prefix+'Construct boundary maker...')
         self.strt_time=datetime.datetime.strptime(cfg_hdl['INPUT']['start_time'],'%Y%m%d%H')
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
-        self.max_seglen=int(cfg_hdl['BOUNDARY']['seg_len'])
+        self.seglen=float(cfg_hdl['BOUNDARY']['seg_len'])
         self.fprefix=cfg_hdl['BOUNDARY']['bdy_prefix']
         self.bdy_dir=cfg_hdl['BOUNDARY']['bdy_dir']
         self.out_dir=cfg_hdl['CORE']['calypso_path']
+
 
         # load domain file
         self.load_domain(cfg_hdl)
@@ -48,11 +51,21 @@ class BdyMaker:
     def load_domain(self, cfg):
         """ load domain file """
         utils.write_log(print_prefix+'Load domain file...')
-        ds_swan=xr.load_dataset(CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/roms_d01.nc')
+        self.proj=cfg['INPUT']['nml_temp']
+        dom_file=CWD+'/domaindb/'+self.proj+'/roms_d01.nc'
+        if os.path.exists(dom_file):
+            ds_swan=xr.load_dataset(dom_file)
+        else:
+            dom_file=CWD+'/domaindb/'+self.proj+'/swan_d01.nc'
+            ds_swan=xr.load_dataset(dom_file)
+
         self.lat2d=ds_swan['lat_rho'].values
         self.lon2d=ds_swan['lon_rho'].values
         self.mask=ds_swan['mask_rho'].values
 
+        res_deg=abs(self.lat2d[1,0]-self.lat2d[0,0])
+        self.max_seglen=int(self.seglen/res_deg)
+        print(print_prefix+'Max seg len: %d' % self.max_seglen)
 
     def build_segs(self, cfg):
         """ build_segs for SWAN """
@@ -60,15 +73,14 @@ class BdyMaker:
         self.segs=[]
         # uid for segs
         self.uid=0
-        # 4 boundaries
-        self.form_bdy('W', self.mask[:,0],
+        # 4 boundaries, take 2px width of mask boundary
+        self.form_bdy('W', self.mask[:,:2],
                       self.lat2d[:,0], self.lon2d[:,0])
-        self.form_bdy('S', self.mask[0,1:],
+        self.form_bdy('S', self.mask[:2,1:],
                       self.lat2d[0,1:], self.lon2d[0,1:])
-
-        self.form_bdy('E', self.mask[1:,-1],
+        self.form_bdy('E', self.mask[1:,-2:],
                       self.lat2d[1:,-1], self.lon2d[1:,-1])
-        self.form_bdy('N', self.mask[-1,1:-2],
+        self.form_bdy('N', self.mask[-2:,1:-2],
                       self.lat2d[-1,1:-2], self.lon2d[-1,1:-2])
         
         for seg in self.segs:
@@ -78,8 +90,10 @@ class BdyMaker:
         """ form boundary accourding to maskline """
         find_flag=False
         uid=self.uid
+        if maskline.shape[0]==2:
+            maskline=maskline.T
         for i in range(maskline.shape[0]):
-            if maskline[i] == 1:
+            if (maskline[i,0] == 1) and (maskline[i,1]==1): # ocean point
                 if not(find_flag):
                     find_flag=True
                     seg_dict={'id':uid, 'orient':bdy_type, 
@@ -94,16 +108,15 @@ class BdyMaker:
                         self.segs.append(seg_dict)
                         seg_dict={}
                         find_flag=False
-            # find land point
-            else:
+            else: # find land point on the boundary (width=2px)
                 # already in seg
                 if find_flag:
                     if seg_len>int(0.25*self.max_seglen):
                         seg_dict=close_seg(seg_dict, 
                             latline[i-1], lonline[i-1], seg_len)
                         self.segs.append(seg_dict)
-                    seg_dict={}
-                    find_flag=False
+                seg_dict={}
+                find_flag=False
             # last position
             if i==maskline.shape[0]-1:
                 if find_flag:
@@ -116,10 +129,22 @@ class BdyMaker:
         """ print seg cmd for swan.in 
         """
         utils.write_log(print_prefix+'print seg cmd for swan.in...')
+        cmd_line=''
         for seg in self.segs:
-            print('BOUNDSPEC SEGMENT XY %8.4f %8.4f %8.4f %8.4f VARIABLE FILE 0 \'%s\''
-                % (seg['lon0'], seg['lat0'], seg['lon1'], seg['lat1'], seg['file']))
-    
+            cmd_line='%sBOUNDSPEC SEGMENT XY %8.4f %8.4f %8.4f %8.4f VARIABLE FILE 0 \'%s\'\n' % (
+                cmd_line, seg['lon0'], seg['lat0'], seg['lon1'], seg['lat1'], seg['file'])
+        
+        with open(CWD+'/db/'+self.proj+'/swan_d01.in', 'r') as sources:
+            lines = sources.readlines()
+
+        with open(CWD+'/db/'+self.proj+'/swan_d01.in', 'w') as sources:
+            for line in lines:
+                # regexp pipeline
+                line=re.sub('@BOUNDSPEC', cmd_line, line)
+                sources.write(line)
+
+        print(cmd_line)
+
     def parse_seg_waves(self):
         """ parse seg cmd for swan.in 
         """
@@ -153,6 +178,7 @@ class BdyMaker:
         for seg in self.segs:
             i,j=find_ij_mask(src_lat2d,src_lon2d,src_mask,seg['latm'],seg['lonm'])
             seg['sigh']=comb_ds['swh'].values[:,j,i]
+            seg['sigh']=np.where(seg['sigh']<0.1, 0.1, seg['sigh'])
             seg['period']=comb_ds['mwp'].values[:,j,i]
             seg['dir']=comb_ds['mwd'].values[:,j,i]
             seg['spread']=cal_dir_spread(comb_ds['wdw'].values[:,j,i])

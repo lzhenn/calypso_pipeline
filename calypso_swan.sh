@@ -5,7 +5,7 @@ NTASKS=$4
 ARCH_PATH=$5
 NML_TMP=$6
 INIT_RUN_FLAG=$7
-NDOM=$8
+NDOM=$8 # e.g. d01
 RST_LEADDAY=$9
 RST_ROOT=$ARCH_PATH
 
@@ -18,31 +18,24 @@ fi
 cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
 
 WKSP_DIR=`pwd`
-if [ $INIT_RUN_FLAG == 1 ]; then
-    cp ./db/${NML_TMP}/swan_d0* ${CALYPSO_PATH}/
-else
-    for IDOM in `seq 1 $NDOM`
-    do
-        cp ./db/${NML_TMP}/swan_d0${IDOM}.in.hot ${CALYPSO_PATH}/swan_d0${IDOM}.in
-    done
+cp ./db/${NML_TMP}/swan_d0* ${CALYPSO_PATH}/
+if [ $INIT_RUN_FLAG == 0 ]; then
+    sed -i "s/&INITIAL/INITIAL/g" ${CALYPSO_PATH}/swan_${NDOM}.in
 fi
 
 CMD=""
-for IDOM in `seq 1 $NDOM`
-do
-    sed -i "s/ssyyyymmdd.hh/${STRT_YMDH}/g" ${CALYPSO_PATH}/swan_d0${IDOM}.in
-    sed -i "s/eeyyyymmdd.hh/${END_YMDH}/g" ${CALYPSO_PATH}/swan_d0${IDOM}.in
-    CMD=${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
-    #CMD=${CMD}" "${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
-done
+sed -i "s/ssyyyymmdd.hh/${STRT_YMDH}/g" ${CALYPSO_PATH}/swan_${NDOM}.in
+sed -i "s/eeyyyymmdd.hh/${END_YMDH}/g" ${CALYPSO_PATH}/swan_${NDOM}.in
+CMD=${CALYPSO_PATH}"/swan_"${NDOM}".in"
+#CMD=${CMD}" "${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
 
 # Calypso Root
 CALYPSO_ROOT=${CALYPSO_PATH%Projects*}
 
 cd ${CALYPSO_ROOT}
-if [ $INIT_RUN_FLAG == 1 ]; then
-    rm -f *.hot-*
-fi
+#if [ $INIT_RUN_FLAG == 1 ]; then
+#    rm -f *.hot-*
+#fi
 echo ">>>>SWAN: Run Calypso..."
 echo ${CMD}
 startTime_s=`date +%s`
@@ -57,7 +50,7 @@ CURR_TS=$(date -d "${STRT_YMDH:0:8}" +%s)
 TIME_DELTA=`expr $CURR_TS - $INIT_TS`
 TIME_DELTA=`expr $TIME_DELTA / 86400`
 
-if [ $sumTime -gt 120 ]; then 
+if [ $sumTime -gt 60 ]; then 
     echo ">>>>SWAN: Archive files"
     # archive day 1-n spunup restarts for future usage
     
@@ -76,10 +69,10 @@ if [ $sumTime -gt 120 ]; then
     mv ${CALYPSO_ROOT}/*mat ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*nc ${ARCH_PATH}
     mv ${CALYPSO_ROOT}/*TXT ${ARCH_PATH}
-
+    echo "Archive Path:"$ARCH_PATH
 else
-    exit 1
     echo $sumTime"s elapsed for 1-day run, unreasonable run time! Resubmit after 5s"
+    exit 1 # not used for hindcast run
     sleep 5
     # try previous day init
     INI_DATE=`date -d "${STRT_YMDH:0:8} -${RST_LEADDAY} day" +%Y%m%d`

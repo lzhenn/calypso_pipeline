@@ -116,17 +116,17 @@ FRICTION MADSEN 0.05
 GEN3 KOMEN
 WCAP KOM 2.36E-5 3.02E-3 2.0 1.0 1.0
 PROP BSBT
-
-BLOCK 'COMPGRID' NOHEADER  'hsig_ssyyyymmdd.hh.nc'    LAY 4 HSIGN 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
-BLOCK 'COMPGRID' NOHEADER  'hswell_ssyyyymmdd.hh.nc'    LAY 4 HSWELL 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
-BLOCK 'COMPGRID' NOHEADER  'dir_ssyyyymmdd.hh.nc'    LAY 4 DIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
-BLOCK 'COMPGRID' NOHEADER  'pdir_ssyyyymmdd.hh.nc'    LAY 4 PDIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
-&BLOCK 'COMPGRID' NOHEADER  'per_ssyyyymmdd.hh.nc'  LAY 4 PER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-&BLOCK 'COMPGRID' NOHEADER  'rper_ssyyyymmdd.hh.nc'  LAY 4 RPER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-BLOCK 'COMPGRID' NOHEADER  'tps_ssyyyymmdd.hh.nc'  LAY 4 TPS 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-&BLOCK 'COMPGRID' NOHEADER  'pthsign_ssyyyymmdd.hh.nc'  LAY 4 PTHSIGN 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-&BLOCK 'COMPGRID' NOHEADER  'ptrtp_ssyyyymmdd.hh.nc'  LAY 4 PTRTP 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-&BLOCK 'COMPGRID' NOHEADER  'ptdir_ssyyyymmdd.hh.nc'  LAY 4 PTDIR 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+BLOCK 'COMPGRID' NOHEADER  'hsig_ssyyyymmdd.hh_d01.mat'    LAY 4 HSIGN 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
+BLOCK 'COMPGRID' NOHEADER  'hswell_ssyyyymmdd.hh_d01.mat'    LAY 4 HSWELL 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
+BLOCK 'COMPGRID' NOHEADER  'dir_ssyyyymmdd.hh_d01.mat'    LAY 4 DIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'pdir_ssyyyymmdd.hh_d01.mat'    LAY 4 PDIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'per_ssyyyymmdd.hh_d01.mat'  LAY 4 PER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'rper_ssyyyymmdd.hh_d01.mat'  LAY 4 RPER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+BLOCK 'COMPGRID' NOHEADER  'tps_ssyyyymmdd.hh_d01.mat'  LAY 4 TPS 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+BLOCK 'COMPGRID' NOHEADER  'lwavp_ssyyyymmdd.hh_d01.mat'  LAY 4 LWAVP 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'pthsign_ssyyyymmdd.hh_d01.mat'  LAY 4 PTHSIGN 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'ptrtp_ssyyyymmdd.hh.mat'  LAY 4 PTRTP 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
+&BLOCK 'COMPGRID' NOHEADER  'ptdir_ssyyyymmdd.hh.mat'  LAY 4 PTDIR 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
 
 & Yangjiang Windfarm
 &POINTS 'SITE' 111.608889 20.961667

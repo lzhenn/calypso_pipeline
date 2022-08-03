@@ -16,11 +16,11 @@ import os
 
 import logging, logging.config
 
-def throw_error(source, msg):
+def throw_error(msg):
     '''
     throw error and exit
     '''
-    logging.error(source+msg)
+    logging.error(msg)
     exit()
 
 def write_log(msg, lvl=20):

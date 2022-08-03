@@ -15,7 +15,7 @@ def main_run():
 
     utils.write_log('Read Config...')    
     # controller config handler
-    cfg_hdl=lib.cfgparser.read_cfg('./conf/config.ini')
+    cfg_hdl=lib.cfgparser.read_cfg('./conf/config.allrun.ini')
 
     # build maker 
     utils.write_log('Build boundary maker...')

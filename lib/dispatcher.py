@@ -47,8 +47,11 @@ class Dispatcher:
         self.strt_time=datetime.datetime.strptime(cfg_hdl['INPUT']['start_time'],'%Y%m%d%H')
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
         self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['WIND']['wind_time_delta']))
+        self.proj_path=cfg_hdl['CORE']['calypso_path']+'/Projects/'+cfg_hdl['INPUT']['nml_temp']
 
-
+        if not(os.path.exists(self.proj_path)):
+            utils.write_log(print_prefix+'Project path does not exists, make it...')
+            os.mkdir(self.proj_path)
     def dispatch(self, cfg):
         """ dispatch procedures to ran SWAN """
         utils.write_log(print_prefix+'Dispatch tasks...')
@@ -67,22 +70,32 @@ class Dispatcher:
         ndom=int(cfg['INPUT']['swan_ndom'])
         
         # WRF Parameters
-        wrf_dir=cfg['WIND']['wrfout_path']+'/'
+        wrf_dir=cfg['WIND']['wrfout_path']
+        if wrf_dir=='@PATH':
+            wrf_dir=CWD+'/wrflink/'
+        else:
+            if not os.path.exists(wrf_dir):
+                utils.throw_error('WRF output directory does not exist!')
+                exit()
+        
         dom_match=lib.cfgparser.get_varlist(cfg['INPUT']['swan_wrf_match'])
 
         for idom in range(ndom):
             # SWAN domain file
-            dom_id='d%02d' % (idom+1)
+            dom_id, wrf_domain=dom_match[idom].split(':')
             if cfg['INPUT'].getboolean('innermost') and idom ==0:
                 continue
-            wrf_domain=dom_match[idom].split(':')[1]
-            ds_swan=xr.load_dataset(CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/roms_'+dom_id+'.nc')
+            dom_file=CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/roms_'+dom_id+'.nc'
+            if not(os.path.exists(dom_file)):
+                dom_file=CWD+'/domaindb/'+cfg['INPUT']['nml_temp']+'/swan_'+dom_id+'.nc'
+            ds_swan=xr.load_dataset(dom_file)
+
             lat_swan=ds_swan['lat_rho']
             lon_swan=ds_swan['lon_rho']
            
             # IF force file exists
             force_fn=cfg['WIND']['wind_prefix']+'_'+dom_id+'.dat'
-            force_fn=cfg['CORE']['calypso_path']+'/Projects/'+cfg['INPUT']['nml_temp']+'/'+force_fn
+            force_fn=self.proj_path+'/'+force_fn
             
             if os.path.exists(force_fn):
                 utils.write_log('Delete existing wind file...%s' % force_fn, 30)
@@ -135,5 +148,3 @@ class Dispatcher:
                 np.savetxt(f, swan_uv, fmt='%7.2f', delimiter=' ')
                 f.write('\n')
             del swan_uv 
-    #def modify_swanin(self, cfg):
-    #def run_swan(self, cfg):

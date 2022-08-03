@@ -12,16 +12,16 @@ NSGRIDS 1
 
 && KEYWORDS TO CREATE AND READ COMPUTATIONAL GRID &&
 CGRID CURVILINEAR 481 321 EXC 9.999000e+003 9.999000e+003 CIRCLE 36 0.04 1.0 24
-READGRID COORDINATES 1 'Projects/swant1t2/swan_coord_d02.grd' 4 0 0 FREE 
+READGRID COORDINATES 1 'Projects/calypso_t123/swan_coord_d02.grd' 4 0 0 FREE 
 
 && KEYWORDS TO CREATE AND READ BATHYMETRY GRID &&
 INPGRID BOTTOM CURVILINEAR 0 0 481 321 EXC 9.999000e+003
-READINP BOTTOM 1 'Projects/swant1t2/swan_bathy_d02.bot' 4 0 FREE 
+READINP BOTTOM 1 'Projects/calypso_t123/swan_bathy_d02.bot' 4 0 FREE 
 
 && KEYWORD TO CREATE WIND GRID &&
 INPGRID WIND CURVILINEAR 0 0 481 321 EXC 9.999000e+003 & 
     NONSTATIONARY ssyyyymmdd.hh0000 1 HR eeyyyymmdd.hh0000
-READINP WIND 1 'Projects/swant1t2/swan_wind_d02.dat' 4 0 FREE 
+READINP WIND 1 'Projects/calypso_t123/swan_wind_d02.dat' 4 0 FREE 
 
 & Boundary files  ****************************************
 &BOUND SHAPESPEC JONSWAP PEAK DSPR DEGREES
@@ -44,8 +44,7 @@ BLOCK 'COMPGRID' NOHEADER  'hsig_ssyyyymmdd.hh_d02.mat'    LAY 4 HSIGN 1.  OUTPU
 BLOCK 'COMPGRID' NOHEADER  'hswell_ssyyyymmdd.hh_d02.mat'    LAY 4 HSWELL 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'dir_ssyyyymmdd.hh_d02.mat'    LAY 4 DIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'per_ssyyyymmdd.hh_d02.mat'  LAY 4 PER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-
-NGRID 'd03bdy' 113.824 22.1165 0 0.656 0.5062 52 40
+NGRID 'd03bdy' 113.823 22.116 0 0.658 0.507 52 40
 NESTOUT 'd03bdy' 'd03bdy.ssyyyymmdd.hh.dat' OUTPUT 1 1 HR
 &BLOCK 'COMPGRID' NOHEADER  'wind_d02.nc'  LAY 4 WIND 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
 &RESTART 'swan_rst_d02.dat' FREE 1 HR

@@ -6,6 +6,7 @@
    
  """
 import os, sys
+import re
 import numpy as np
 import xarray as xr
 from scipy import interpolate
@@ -15,7 +16,8 @@ from scipy import interpolate
 template_name='test_dom'
 #latS, latN, lonW, lonE = 21.483, 22.9848, 112.475, 114.977
 #latS, latN, lonW, lonE = 21.7, 41.2, 116.4, 129.7
-latS, latN, lonW, lonE = 0, 30, 100, 125
+#latS, latN, lonW, lonE = 18.0, 28, 115, 123
+latS, latN, lonW, lonE = 15.0, 35, 100.0, 120
 # grid spatial resolution (roughly) in km
 # landsea mask in 1km, thus >=1km is recommended
 dx=10
@@ -106,6 +108,23 @@ def main_run():
     swan_ele=xr.where(swan_mask==0, 9999.0, swan_ele)
     with open(domdb_path+'/swan_bathy_d01.bot', 'w') as f:
         np.savetxt(f, swan_ele.values, fmt='%13.8f', delimiter=' ')
+
+    # db file
+    db_path=CWD+'/../db/'+template_name
+    
+    if not(os.path.exists(db_path)):
+        os.mkdir(db_path)
+
+    with open(CWD+'/../db/swan_d01.in.tmp', 'r') as sources:
+        lines = sources.readlines()
+    
+    with open(db_path+'/swan_d01.in', 'w') as sources:
+        for line in lines:
+            # regexp pipeline
+            line=re.sub('@NAME', template_name, line)
+            line=re.sub('@NWEGRDS', str(ngrdx-1), line)
+            line=re.sub('@NSNGRDS', str(ngrdy-1), line)
+            sources.write(line)
 
 if __name__=='__main__':
     main_run()
