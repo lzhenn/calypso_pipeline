@@ -3,6 +3,14 @@
 Calypso_pipeline controls the pipeline of the SWAN system.
 
 ## Setup
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+If you wish to feed in `grib2` data, Please first install [ecCodes](https://confluence.ecmwf.int/display/ECC/ecCodes+Home).
+
 First you need to edit `conf/setup.ini` according to your environment to setup static data and other parameters.
 
 ## Usage
