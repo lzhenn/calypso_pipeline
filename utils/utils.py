@@ -21,7 +21,7 @@ def throw_error(msg):
     throw error and exit
     '''
     logging.error(msg)
-    exit()
+    exit(1)
 
 def write_log(msg, lvl=20):
     '''
@@ -43,6 +43,30 @@ def get_wrf_file(tgt_time, wrf_dir, wrf_domain):
     return aimed wrf file name given tgt_time and wrf_domain
     '''
     return 'wrfout_'+wrf_domain+'_'+tgt_time.strftime('%Y-%m-%d_%H:00:00')
+
+def is_domain_within_wrf(lat_swan, lon_swan, wrf_u10):
+    '''
+    test if swan domain is within the wrf domain
+    '''
+   
+    if not(lat_swan.min()>=wrf_u10.XLAT.min() and lat_swan.max()<=wrf_u10.XLAT.max()):
+        return False
+    if not(lon_swan.min()>=wrf_u10.XLONG.min() and lon_swan.max()<=wrf_u10.XLONG.max()):
+        return False
+    return True
+
+def is_domain_within_bdyfile(lat_swan, lon_swan, lat_bdy, lon_bdy):
+    '''
+    test if swan domain is within the boundary file domain
+    '''
+
+    if not(lat_swan.min()>=lat_bdy.min() and lat_swan.max()<=lat_bdy.max()):
+        return False
+    if not(lon_swan.min()>=lon_bdy.min() and lon_swan.max()<=lon_bdy.max()):
+        return False
+    return True
+
+
 def interp_wrf2swan(wrf_var, swan_lat, swan_lon):
     """ 
     Linearly interpolate var from WRF grid onto SWAN grid 

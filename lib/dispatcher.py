@@ -78,7 +78,6 @@ class Dispatcher:
         else:
             if not os.path.exists(wrf_dir):
                 utils.throw_error('WRF output directory does not exist!')
-                exit()
         
         dom_match=lib.cfgparser.get_varlist(cfg['INPUT']['swan_wrf_match'])
 
@@ -124,6 +123,23 @@ class Dispatcher:
                 wrf_time=wrf.extract_times(
                         wrf_hdl,timeidx=wrf.ALL_TIMES, do_xtime=False)
                 wrf_hdl.close()
+
+                # test if SWAN domain is within the WRF domain
+                utils.write_log(
+                    print_prefix+'lat_swan min:%7.4f; max:%7.4f' % (
+                        lat_swan.values.min(), lat_swan.values.max()))
+                utils.write_log(
+                    print_prefix+'lat_wrf min:%7.4f; max:%7.4f' % (
+                        wrf_u10.XLAT.values.min(), wrf_u10.XLAT.values.max()))
+                utils.write_log(
+                    print_prefix+'lon_swan min:%7.4f; max:%7.4f' % (
+                        lon_swan.values.min(), lon_swan.values.max()))
+                utils.write_log(
+                    print_prefix+'lon_wrf min:%7.4f; max:%7.4f' % (
+                        wrf_u10.XLONG.values.min(), wrf_u10.XLONG.values.max()))
+
+                if not(utils.is_domain_within_wrf(lat_swan, lon_swan, wrf_u10)):
+                    utils.throw_error('SWAN domain is not within the WRF domain!')
                 
                 wrf_time=[pd.to_datetime(itm) for itm in wrf_time]
                 

@@ -76,8 +76,9 @@ def main_run():
 
     # make boundary condition file
     if cfg['BOUNDARY'].getboolean('gen_bdy') == True:
-        os.system('python3 '+CWD+'/mk_bdy.py')   
-    
+        code=os.system('python3 '+CWD+'/mk_bdy.py')   
+        if code!=0:
+            utils.throw_error('Failed to generate boundary condition file!')
     full_strt_time=datetime.datetime.strptime(cfg['INPUT']['start_time'],'%Y%m%d%H')
     full_end_time=datetime.datetime.strptime(cfg['INPUT']['end_time'],'%Y%m%d%H')
 

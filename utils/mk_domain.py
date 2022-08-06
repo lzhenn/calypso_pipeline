@@ -13,11 +13,11 @@ from scipy import interpolate
 
 
 # -----------Below for user specificed domain settings------------------------
-template_name='scs'
+template_name='test_dom'
 #latS, latN, lonW, lonE = 21.483, 22.9848, 112.475, 114.977
 #latS, latN, lonW, lonE = 21.7, 41.2, 116.4, 129.7
 #latS, latN, lonW, lonE = 18.0, 28, 115, 123
-latS, latN, lonW, lonE = 10.0, 22.0, 100.0, 120
+latS, latN, lonW, lonE = 5.0, 22.0, 100.0, 120
 # grid spatial resolution (roughly) in km
 # landsea mask in 1km, thus >=1km is recommended
 dx=10

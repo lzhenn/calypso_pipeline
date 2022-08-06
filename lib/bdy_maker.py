@@ -66,7 +66,7 @@ class BdyMaker:
 
         res_deg=abs(self.lat2d[1,0]-self.lat2d[0,0])
         self.max_seglen=int(self.seglen/res_deg)
-        print(print_prefix+'Max seg len: %d' % self.max_seglen)
+        utils.write_log(print_prefix+'Max seg len: %d' % self.max_seglen)
 
     def build_segs(self, cfg):
         """ build_segs for SWAN """
@@ -172,6 +172,8 @@ class BdyMaker:
 
         src_lon=comb_ds['longitude'].values
         src_lat=comb_ds['latitude'].values
+        if not(utils.is_domain_within_bdyfile(self.lat2d, self.lon2d, src_lat, src_lon)):
+            utils.throw_error(print_prefix+'SWAN domain is out of wave bdy file! Cannot continue!')
         src_lat2d,src_lon2d=np.meshgrid(src_lat, src_lon)
         src_mask=np.isnan(comb_ds['swh'].isel(time=0).values)
         ts=comb_ds['valid_time'].values
