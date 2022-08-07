@@ -48,18 +48,12 @@ prescribed by restart_frq in conf/config.allrun.ini
 ### mk_bdy.py
 run_all.py will call `mk_bdy.py` to generate the boundary file for each integration.
 **NOTE:** When you first time run the model after generating the specific domain configurations, this script will overwrite the `@BOUNDSPEC` in `./db/${DOMAIN}/swan_d01.in`.
-There could be some glitches in the boundary segments, it is not a big deal and you could find similar information as below in `PRINT01-001`.
-```
- BOUNDSPEC SEGMENT XY 118.9531  10.0000 120.3971  10.0000 VARIABLE FILE 0 'swan_bdy.S.014.txt'
- point with location     118.9531     10.0000 is not active
- ** Error            : invalid boundary point
- segment point     118.95     10.00 grid   -99.00  -99.00 -98 -98
- ** Error            : (  -99  -99) is outside computational grid
-```
-Just manually modify the boundary lat/lon to shift a little bit to fix the problem. This is quite weird because the problematic boundary point is literally ACTIVE in the generated domain.
 
 ### run_serial.py
 `run_serial.py` is the main script to run the SWAN integration in single serial. It takes in `conf/config.ini` to control the process.
+
+### utils/gfs_wave_down_fcst_subdomain.sh
+`gfs_wave_down_fcst_subdomain.sh` is a bash script to download the GFS wave forecast data using grib filter.
 
 ### utils/mk_domain.py
 `mk_domain.py` is a utility script to generate the domain file for SWAN. You need to set the corresponding paras in the script for your usage.
