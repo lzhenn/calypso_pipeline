@@ -1,26 +1,29 @@
-attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1659291887007/work
-Bottleneck @ file:///home/conda/feedstock_root/build_artifacts/bottleneck_1656803758298/work
+attrs==22.1.0
+Bottleneck==1.3.5
 certifi==2022.6.15
-cffi @ file:///tmp/abs_98z5h56wf8/croots/recipe/cffi_1659598650955/work
-cfgrib @ file:///home/conda/feedstock_root/build_artifacts/cfgrib_1647506774059/work
-cftime @ file:///tmp/build/80754af9/cftime_1638358471540/work
-click @ file:///home/conda/feedstock_root/build_artifacts/click_1651215153723/work
-eccodes @ file:///home/conda/feedstock_root/build_artifacts/python-eccodes_1655141063920/work
-findlibs @ file:///home/conda/feedstock_root/build_artifacts/findlibs_1637973289948/work
+cffi==1.15.1
+cfgrib==0.9.10.1
+cftime==1.5.1.1
+click==8.1.3
+eccodes==1.4.2
+findlibs==0.0.2
 mkl-fft==1.3.1
-mkl-random @ file:///tmp/build/80754af9/mkl_random_1626186066731/work
+mkl-random==1.2.2
 mkl-service==2.4.0
 netCDF4==1.5.7
-numexpr @ file:///opt/conda/conda-bld/numexpr_1656940300424/work
-numpy @ file:///tmp/abs_653_j00fmm/croots/recipe/numpy_and_numpy_base_1659432701727/work
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1637239678211/work
+numexpr==2.8.3
+numpy==1.23.1
+packaging==21.3
 pandas==1.4.3
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
-pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1652235407899/work
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
-pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1647961439546/work
-scipy @ file:///home/conda/feedstock_root/build_artifacts/scipy_1653073865807/work
-six @ file:///tmp/build/80754af9/six_1644875935023/work
-wrapt @ file:///home/conda/feedstock_root/build_artifacts/wrapt_1651495236231/work
+pip==22.1.2
+pycparser==2.21
+pyparsing==3.0.9
+python-dateutil==2.8.2
+pytz==2022.1
+scipy==1.8.1
+setuptools==61.2.0
+six==1.16.0
+wheel==0.37.1
+wrapt==1.14.1
 wrf-python==1.3.4.1
-xarray @ file:///home/conda/feedstock_root/build_artifacts/xarray_1658844022165/work
+xarray==2022.6.0
