@@ -13,13 +13,13 @@ DMDB_ROOT = cfg['CONST']['domdb_root']
 
 # set DOMDB_PATH below to link the geo_em data
 WRFFC_PATH=cfg['CONST']['ust_wrffc_root']
-for itm in ['domaindb','Calypso','wrf_fc']:
+for itm in ['domaindb','swan_lite','wrf_fc']:
     try:
         os.remove(CWD+'/'+itm)
     except OSError:
         pass
 
-os.system('ln -sf '+SWAN_ROOT+' ./Calypso')
+os.system('ln -sf '+SWAN_ROOT+' ./swan_lite')
 os.system('ln -sf '+DMDB_ROOT+' ./domaindb')
 
 if WRFFC_PATH.strip() != '':

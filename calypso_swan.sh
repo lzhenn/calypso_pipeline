@@ -18,28 +18,25 @@ fi
 cp ./domaindb/${NML_TMP}/* ${CALYPSO_PATH}/
 
 WKSP_DIR=`pwd`
-cp ./db/${NML_TMP}/swan_d0* ${CALYPSO_PATH}/
-if [ $INIT_RUN_FLAG == 0 ]; then
-    sed -i "s/&INITIAL/INITIAL/g" ${CALYPSO_PATH}/swan_${NDOM}.in
-fi
-
-CMD=""
-sed -i "s/ssyyyymmdd.hh/${STRT_YMDH}/g" ${CALYPSO_PATH}/swan_${NDOM}.in
-sed -i "s/eeyyyymmdd.hh/${END_YMDH}/g" ${CALYPSO_PATH}/swan_${NDOM}.in
-CMD=${CALYPSO_PATH}"/swan_"${NDOM}".in"
-#CMD=${CMD}" "${CALYPSO_PATH}"/swan_d0"${IDOM}".in"
-
 # Calypso Root
 CALYPSO_ROOT=${CALYPSO_PATH%Projects*}
+
+cp ./db/${NML_TMP}/swan_d0* ${CALYPSO_ROOT}/INPUT
+if [ $INIT_RUN_FLAG == 0 ]; then
+    sed -i "s/&INITIAL/INITIAL/g" ${CALYPSO_ROOT}/INPUT
+fi
+
+sed -i "s/ssyyyymmdd.hh/${STRT_YMDH}/g" ${CALYPSO_ROOT}/INPUT
+sed -i "s/eeyyyymmdd.hh/${END_YMDH}/g" ${CALYPSO_ROOT}/INPUT
+
 
 cd ${CALYPSO_ROOT}
 #if [ $INIT_RUN_FLAG == 1 ]; then
 #    rm -f *.hot-*
 #fi
-echo ">>>>SWAN: Run Calypso..."
-echo ${CMD}
+echo ">>>>SWAN: Run SWAN_LITE..."
 startTime_s=`date +%s`
-mpirun -np ${NTASKS} ./coawstM ${CMD} >& calypso.log
+mpirun -np ${NTASKS} ./swan.exe  >& swan.log
 endTime_s=`date +%s`
 sumTime=$[ $endTime_s - $startTime_s ]
 ARCH_DATE=`basename ${ARCH_PATH}`

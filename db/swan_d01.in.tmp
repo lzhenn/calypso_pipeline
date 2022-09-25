@@ -8,7 +8,7 @@ SET DEPMIN 0.05 INRHOG 1 NAUTICAL PWTAIL 5
 COORDINATES SPHERICAL
 
 && KEYWORD for number of nested SWAN grids.
-NSGRIDS 1 
+&& NSGRIDS 1 
 
 && KEYWORDS TO CREATE AND READ COMPUTATIONAL GRID &&
 CGRID CURVILINEAR @NWEGRDS @NSNGRDS EXC 9.999000e+003 9.999000e+003 CIRCLE 36 0.04 1.0 24
@@ -39,7 +39,7 @@ FRICTION MADSEN 0.05
 GEN3 KOMEN
 WCAP KOM 2.36E-5 3.02E-3 2.0 1.0 1.0
 PROP BSBT
-
+&& !!! Lite version do not support netCDF output !!!
 BLOCK 'COMPGRID' NOHEADER  'hsig_ssyyyymmdd.hh_d01.mat'    LAY 4 HSIGN 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'hswell_ssyyyymmdd.hh_d01.mat'    LAY 4 HSWELL 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'dir_ssyyyymmdd.hh_d01.mat'    LAY 4 DIR 1.  OUTPUT ssyyyymmdd.hh0000 1 HR
@@ -48,9 +48,6 @@ BLOCK 'COMPGRID' NOHEADER  'dir_ssyyyymmdd.hh_d01.mat'    LAY 4 DIR 1.  OUTPUT s
 &BLOCK 'COMPGRID' NOHEADER  'rper_ssyyyymmdd.hh_d01.mat'  LAY 4 RPER 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'tps_ssyyyymmdd.hh_d01.mat'  LAY 4 TPS 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
 BLOCK 'COMPGRID' NOHEADER  'lwavp_ssyyyymmdd.hh_d01.mat'  LAY 4 LWAVP 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-
-BLOCK 'COMPGRID' NOHEADER 'wind_ssyyyymmdd.hh_d01.nc'   LAY 4 WIND 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
-BLOCK 'COMPGRID' NOHEADER 'hsig_ssyyyymmdd.hh_d01.nc'   LAY 4 HSIGN 1.   OUTPUT ssyyyymmdd.hh0000 1 HR
 
 &RESTART 'swan_rst_d01.dat' FREE 1 HR
 

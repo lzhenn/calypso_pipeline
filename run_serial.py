@@ -39,9 +39,9 @@ def main_run():
         
     # end if rewrite wind
 
-    utils.write_log('Run Calypso...')
+    utils.write_log('Run Swan-Lite...')
     
-    proj_path=CWD+'/Calypso/Projects/'+cfg_hdl['INPUT']['nml_temp']+'/'
+    proj_path=CWD+'/swan_lite/Projects/'+cfg_hdl['INPUT']['nml_temp']+'/'
 
     # deal with swan domains 
     dom_match=lib.cfgparser.get_varlist(cfg_hdl['INPUT']['swan_wrf_match'])

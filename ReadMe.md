@@ -1,6 +1,6 @@
-# Calypso_pipeline
+# SWAN_Lite_Ctler 
 
-Calypso_pipeline controls the pipeline actions of the SWAN system.
+SWAN_Lite_Ctler controls the pipeline actions of the SWAN system.
 
 ## Setup
 
@@ -26,8 +26,8 @@ After installing dependencies, you need to edit `conf/setup.ini` according to yo
 When you properly setup the pipeline, first edit the `./conf/config.allrun.ini` file properly.
 
 ``` python
-# This config file will be fed to the ctrl_seprun_calypso.py
-# to rewrite the config.ini and control the ctrl_run_calypso.py
+# This config file will be fed to the `run_all.py`
+# to rewrite the config.ini and control the run_seriel.py
 
 [INPUT]
 nml_temp = test_dom 
@@ -62,7 +62,7 @@ init_run = 1
 
 [ARCHIVE]
 # yyyymmddhh will be automatically added to the end of the archive path
-arch_path = /home/lzhenn/array74/Njord_Calypso/case_study/scs/
+arch_path = /home/abc/swan_case/
 ``` 
 
 

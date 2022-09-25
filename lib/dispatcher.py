@@ -48,7 +48,7 @@ class Dispatcher:
         self.end_time=datetime.datetime.strptime(cfg_hdl['INPUT']['end_time'],'%Y%m%d%H')
         self.wind_time_delta=datetime.timedelta(minutes=60)
         #self.wind_time_delta=datetime.timedelta(minutes=int(cfg_hdl['WIND']['wind_time_delta']))
-        self.proj_path=CWD+'/Calypso/Projects/'+cfg_hdl['INPUT']['nml_temp']
+        self.proj_path=CWD+'/swan_lite/Projects/'+cfg_hdl['INPUT']['nml_temp']
 
         if not(os.path.exists(self.proj_path)):
             utils.write_log(print_prefix+'Project path does not exists, make it...')

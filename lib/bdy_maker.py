@@ -37,7 +37,7 @@ class BdyMaker:
         self.fprefix='swan_bdy'
         #self.fprefix=cfg_hdl['BOUNDARY']['bdy_prefix']
         self.bdy_dir=cfg_hdl['BOUNDARY']['bdy_dir']
-        self.out_dir=CWD+'/Calypso/'
+        self.out_dir=CWD+'/swan_lite/'
         #self.out_dir=cfg_hdl['CORE']['calypso_path']
 
 
